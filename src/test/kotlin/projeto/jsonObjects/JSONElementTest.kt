@@ -3,6 +3,10 @@ package projeto.jsonObjects
 import JSONFileCreator
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import projeto.visitor.findObjectsWithProperty
+import projeto.visitor.findValuesWithProperty
+import projeto.visitor.validatePropertyValue
+import kotlin.reflect.typeOf
 
 class JSONElementTest {
 
@@ -79,7 +83,6 @@ class JSONElementTest {
         jsonObject2.put("internacional", INTERNACIONAL2)
 
         jsonObject3.put("numero", NUMERO3)
-        jsonObject3.put("nome", NOME3)
         jsonObject3.put("internacional", INTERNACIONAL3)
 
         inscritos.add(jsonObject)
@@ -91,6 +94,15 @@ class JSONElementTest {
         root.put("data-exame", DATA_EXAME)
         root.put("inscritos", inscritos)
 
+        val visitor = findValuesWithProperty("numero")
+        root.accept(visitor)
+
+        val visitor2 = findObjectsWithProperty(listOf("numero","nome"))
+        root.accept(visitor2)
+
+
+        val visitor3 = validatePropertyValue("numero", typeOf(2))
+        root.accept(visitor3)
         val creator = JSONFileCreator("src/test/resources/PA.json")
         creator.writeToFile(root)
 

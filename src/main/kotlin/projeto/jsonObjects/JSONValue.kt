@@ -20,4 +20,8 @@ class JSONValue(s: String) : JSONElement {
     override fun toJSONString(indent: Int): String {
         return value.toString()
     }
+
+    fun getValue(): Class<Any>? {
+        return value?.javaClass
+    }
 }

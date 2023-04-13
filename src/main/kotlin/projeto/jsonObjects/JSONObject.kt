@@ -23,6 +23,10 @@ class JSONObject : JSONElement {
         return map[key]
     }
 
+    fun getProperties(): Set<String> {
+        return map.keys
+    }
+
     override fun accept(visitor: JSONVisitor) {
         visitor.visit(this)
         map.values.forEach { it.accept(visitor) }
