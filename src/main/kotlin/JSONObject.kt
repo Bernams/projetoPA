@@ -1,4 +1,4 @@
-class JSONObject {
+class JSONObject : JSONElement{
     fun put(s: String, jsonValue: JSONValue) {
 
     }

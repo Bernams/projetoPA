@@ -1,4 +1,4 @@
-class JSONArray {
+class JSONArray : JSONElement {
     fun add(jsonValue: JSONValue) {
         TODO("Not yet implemented")
     }
