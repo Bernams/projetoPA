@@ -1,6 +1,7 @@
 package projeto.jsonObjects
 
 import JSONVisitor
+import java.lang.IllegalArgumentException
 
 class JSONValue(s: String) : JSONElement {
 
@@ -10,7 +11,8 @@ class JSONValue(s: String) : JSONElement {
         s == "false" -> false
         s.matches(Regex("-?\\d+")) -> s.toInt()
         s.matches(Regex("-?\\d+\\.\\d+")) -> s.toDouble()
-        else -> s
+        s is String -> "\$value\""
+        else -> throw IllegalArgumentException("The provided argument is not valid.")
     }
 
     override fun accept(visitor: JSONVisitor) {
