@@ -1,3 +1,5 @@
+package jsonObjects
+
 class JSONValue(s: String) : JSONElement {
 
     val value: Any? = when {

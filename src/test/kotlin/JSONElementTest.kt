@@ -1,3 +1,6 @@
+import jsonObjects.JSONArray
+import jsonObjects.JSONObject
+import jsonObjects.JSONValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
@@ -6,23 +9,27 @@ class JSONElementTest {
     @Test
     fun testJSONObject() {
         val jsonObject = JSONObject()
-        jsonObject.put("uc", JSONValue("PA"))
-        jsonObject.put("ects", JSONValue("6.0"))
+        val jsonValue = JSONValue("PA")
+        val jsonValue2 = JSONValue("6.0")
+        jsonObject.put("uc", jsonValue)
+        jsonObject.put("ects", jsonValue2)
 
         assertEquals(2, jsonObject.size())
-        assertEquals(JSONValue("PA"), jsonObject.get("uc"))
-        assertEquals(JSONValue("6.0"), jsonObject.get("ects"))
+        assertEquals(jsonValue, jsonObject.get("uc"))
+        assertEquals(jsonValue2, jsonObject.get("ects"))
     }
 
     @Test
     fun testJSONArray() {
         val jsonArray = JSONArray()
-        jsonArray.add(JSONValue("Dave Farley"))
-        jsonArray.add(JSONValue("Martin Fowler"))
+        val jsonValue = JSONValue("Dave Farley")
+        val jsonValue2 = JSONValue("Martin Fowler")
+        jsonArray.add(jsonValue)
+        jsonArray.add(jsonValue2)
 
         assertEquals(2, jsonArray.size())
-        assertEquals(JSONValue("Dave Farley"), jsonArray.get(0))
-        assertEquals(JSONValue("Martin Fowler"), jsonArray.get(1))
+        assertEquals(jsonValue, jsonArray.get(0))
+        assertEquals(jsonValue2, jsonArray.get(1))
     }
 
     @Test

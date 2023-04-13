@@ -1,12 +1,14 @@
-class JSONObject : JSONElement{
+package jsonObjects
+
+class JSONObject : JSONElement {
 
     //create a map with key JsonValue pairs
     private val map = mutableMapOf<String, JSONValue>()
 
 
     //put method to add to map
-    fun put(s: String, jsonValue: JSONValue) {
-        map[s] = jsonValue
+    fun put(key: String, jsonValue: JSONValue) {
+        map[key] = jsonValue
     }
 
     //size method to return size of map
@@ -15,8 +17,8 @@ class JSONObject : JSONElement{
     }
 
     //get method to return value of key
-    fun get(s: Any): Any? {
-        return map[s]
+    fun get(key: String): JSONValue? {
+        return map[key]
     }
 
     override fun toJSONString(): String {

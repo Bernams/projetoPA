@@ -1,3 +1,5 @@
+package jsonObjects
+
 class JSONArray : JSONElement {
     private val elements = mutableListOf<JSONElement>()
 
