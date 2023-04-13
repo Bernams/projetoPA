@@ -1,4 +1,4 @@
-class JSONValue(s: String) {
+class JSONValue(s: String) : JSONElement {
 
     val value: Any? = when {
         s == "null" -> null
