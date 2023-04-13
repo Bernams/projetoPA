@@ -22,8 +22,14 @@ class JSONArray : JSONElement {
         elements.forEach { it.accept(visitor) }
     }
 
-    override fun toJSONString(): String {
-        val jsonString = elements.joinToString(separator = ", ") { it.toJSONString() }
-        return "[$jsonString]"
+     override fun toJSONString(indent: Int): String {
+        if (elements.isEmpty()) return "[]"
+
+        val indentString = " ".repeat(indent)
+        val childIndentString = " ".repeat(indent + 2)
+        val jsonString = elements.joinToString(separator = ",\n$childIndentString") {
+            it.toJSONString(indent + 2)
+        }
+        return "[\n$childIndentString$jsonString\n$indentString]"
     }
 }

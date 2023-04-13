@@ -5,11 +5,11 @@ import JSONVisitor
 class JSONObject : JSONElement {
 
     //create a map with key JsonValue pairs
-    private val map = mutableMapOf<String, JSONValue>()
+    private val map = mutableMapOf<String, JSONElement>()
 
 
     //put method to add to map
-    fun put(key: String, jsonValue: JSONValue) {
+    fun put(key: String, jsonValue: JSONElement) {
         map[key] = jsonValue
     }
 
@@ -19,7 +19,7 @@ class JSONObject : JSONElement {
     }
 
     //get method to return value of key
-    fun get(key: String): JSONValue? {
+    fun get(key: String): JSONElement? {
         return map[key]
     }
 
@@ -27,10 +27,14 @@ class JSONObject : JSONElement {
         visitor.visit(this)
         map.values.forEach { it.accept(visitor) }
     }
-    override fun toJSONString(): String {
-        val jsonString = map.entries.joinToString(separator = ", ") { (key, value) ->
-            "\"$key\": ${value.toJSONString()}"
+    override fun toJSONString(indent: Int): String {
+        if (map.isEmpty()) return "{}"
+
+        val indentString = " ".repeat(indent)
+        val childIndentString = " ".repeat(indent + 2)
+        val jsonString = map.entries.joinToString(separator = ",\n$childIndentString") { (key, value) ->
+            "\"$key\": ${value.toJSONString(indent + 2)}"
         }
-        return "{$jsonString}"
-        }
+        return "{\n$childIndentString$jsonString\n$indentString}"
     }
+}

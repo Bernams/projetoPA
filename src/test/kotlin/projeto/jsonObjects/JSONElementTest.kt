@@ -1,5 +1,6 @@
 package projeto.jsonObjects
 
+import JSONFileCreator
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
@@ -44,5 +45,54 @@ class JSONElementTest {
         assertEquals(3.14, doubleValue.value)
         assertEquals(true, booleanValue.value)
         assertNull(nullValue.value)
+    }
+
+
+
+    @Test
+    fun pacoh() {
+        val inscritos = JSONArray()
+
+        val root = JSONObject()
+        val jsonObject = JSONObject()
+        val jsonObject2 = JSONObject()
+        val jsonObject3 = JSONObject()
+        val UC = JSONValue("PA")
+        val ECTS = JSONValue("6.0")
+        val DATA_EXAME = JSONValue("null")
+        val NUMERO = JSONValue("101101")
+        val NOME = JSONValue("Dave Farley")
+        val INTERNACIONAL = JSONValue("true")
+        val NUMERO2 = JSONValue("101102")
+        val NOME2 = JSONValue("Martin Fowler")
+        val INTERNACIONAL2 = JSONValue("true")
+        val NUMERO3 = JSONValue("26503")
+        val NOME3 = JSONValue("André Santos")
+        val INTERNACIONAL3 = JSONValue("false")
+
+        jsonObject.put("numero", NUMERO)
+        jsonObject.put("nome", NOME)
+        jsonObject.put("internacional", INTERNACIONAL)
+
+        jsonObject2.put("numero", NUMERO2)
+        jsonObject2.put("nome", NOME2)
+        jsonObject2.put("internacional", INTERNACIONAL2)
+
+        jsonObject3.put("numero", NUMERO3)
+        jsonObject3.put("nome", NOME3)
+        jsonObject3.put("internacional", INTERNACIONAL3)
+
+        inscritos.add(jsonObject)
+        inscritos.add(jsonObject2)
+        inscritos.add(jsonObject3)
+
+        root.put("uc", UC)
+        root.put("ects", ECTS)
+        root.put("data-exame", DATA_EXAME)
+        root.put("inscritos", inscritos)
+
+        val creator = JSONFileCreator("src/test/resources/PA.json")
+        creator.writeToFile(root)
+
     }
 }
