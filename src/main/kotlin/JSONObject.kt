@@ -15,8 +15,14 @@ class JSONObject : JSONElement{
     }
 
     //get method to return value of key
-    fun get(s: String): Any? {
+    fun get(s: Any): Any? {
         return map[s]
     }
 
-}
+    override fun toJSONString(): String {
+        val jsonString = map.entries.joinToString(separator = ", ") { (key, value) ->
+            "\"$key\": ${value.toJSONString()}"
+        }
+        return "{$jsonString}"
+        }
+    }

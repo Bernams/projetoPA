@@ -8,4 +8,7 @@ class JSONValue(s: String) : JSONElement {
         s.matches(Regex("-?\\d+\\.\\d+")) -> s.toDouble()
         else -> s
     }
+    override fun toJSONString() : String {
+        return value.toString()
+    }
 }
