@@ -1,4 +1,4 @@
-class JSONObject {
+class JSONObject : JSONElement{
 
     //create a map with key JsonValue pairs
     private val map = mutableMapOf<String, JSONValue>()
