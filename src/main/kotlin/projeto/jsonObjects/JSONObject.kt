@@ -1,4 +1,6 @@
-package jsonObjects
+package projeto.jsonObjects
+
+import JSONVisitor
 
 class JSONObject : JSONElement {
 
@@ -21,6 +23,10 @@ class JSONObject : JSONElement {
         return map[key]
     }
 
+    override fun accept(visitor: JSONVisitor) {
+        visitor.visit(this)
+        map.values.forEach { it.accept(visitor) }
+    }
     override fun toJSONString(): String {
         val jsonString = map.entries.joinToString(separator = ", ") { (key, value) ->
             "\"$key\": ${value.toJSONString()}"

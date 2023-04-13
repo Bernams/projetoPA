@@ -1,4 +1,6 @@
-package jsonObjects
+package projeto.jsonObjects
+
+import JSONVisitor
 
 class JSONArray : JSONElement {
     private val elements = mutableListOf<JSONElement>()
@@ -13,6 +15,11 @@ class JSONArray : JSONElement {
 
     fun size(): Int {
         return elements.size
+    }
+
+    override fun accept(visitor: JSONVisitor) {
+        visitor.visit(this)
+        elements.forEach { it.accept(visitor) }
     }
 
     override fun toJSONString(): String {

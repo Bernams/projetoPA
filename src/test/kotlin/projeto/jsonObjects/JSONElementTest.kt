@@ -1,6 +1,5 @@
-import jsonObjects.JSONArray
-import jsonObjects.JSONObject
-import jsonObjects.JSONValue
+package projeto.jsonObjects
+
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
