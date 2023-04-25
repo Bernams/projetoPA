@@ -2,11 +2,11 @@ package projeto.jsonObjects
 
 import JSONVisitor
 
-class JSONString(val s: String?) : JSONElement {
+class JSONString(val str: String?) : JSONElement {
 
 
     override fun toJSONString(indent: Int): String {
-        return '"' + s.toString()+ '"'
+        return '"' + str.toString()+ '"'
     }
 
     override fun accept(visitor: JSONVisitor) {

@@ -3,10 +3,10 @@ package projeto.jsonObjects
 import JSONFileCreator
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import projeto.visitor.FindObjectsWithProperty
-import projeto.visitor.FindValuesWithProperty
-import projeto.visitor.ValidatePropertyValue
-import kotlin.reflect.typeOf
+import projeto.visitor.Validations.FindObjectsWithProperty
+import projeto.visitor.Validations.FindValuesWithProperty
+import projeto.visitor.Validations.ValidateInscritosProperty
+import projeto.visitor.Validations.ValidateNumeroProperty
 
 class JSONElementTest {
 
@@ -43,10 +43,10 @@ class JSONElementTest {
         val doubleValue = JSONNumber(3.14)
         val booleanValue = JSONBoolean(true)
 
-        assertEquals("Hello, World!", stringValue.s)
-        assertEquals(42, intValue.s)
-        assertEquals(3.14, doubleValue.s)
-        assertEquals(true, booleanValue.s)
+        assertEquals("Hello, World!", stringValue.str)
+        assertEquals(42, intValue.num)
+        assertEquals(3.14, doubleValue.num)
+        assertEquals(true, booleanValue.bool)
     }
 
 
@@ -61,7 +61,7 @@ class JSONElementTest {
         val jsonObject3 = JSONObject()
         val UC = JSONString("PA")
         val ECTS = JSONNumber(6.0)
-        val DATA_EXAME = JSONBoolean(null)
+        val DATA_EXAME = JSONNumber(null)
         val NUMERO = JSONNumber(101101)
         val NOME = JSONString("Dave Farley")
         val INTERNACIONAL = JSONBoolean(true)
@@ -81,6 +81,7 @@ class JSONElementTest {
         jsonObject2.put("internacional", INTERNACIONAL2)
 
         jsonObject3.put("numero", NUMERO3)
+        jsonObject3.put("nome", NOME3)
         jsonObject3.put("internacional", INTERNACIONAL3)
 
         inscritos.add(jsonObject)
@@ -98,9 +99,13 @@ class JSONElementTest {
         val visitor2 = FindObjectsWithProperty(listOf("numero","nome"))
         root.accept(visitor2)
 
+        val visitor3 = ValidateNumeroProperty()
+        root.accept(visitor3)
 
-        //val visitor3 = ValidatePropertyValue("numero", typeOf(2))
-        //root.accept(visitor3)
+        val visitor4 = ValidateInscritosProperty()
+        root.accept(visitor4)
+
+
         val creator = JSONFileCreator("src/test/resources/PA.json")
         creator.writeToFile(root)
 
