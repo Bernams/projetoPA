@@ -1,9 +1,9 @@
-import projeto.jsonObjects.JSONArray
-import projeto.jsonObjects.JSONObject
-import projeto.jsonObjects.JSONValue
+import projeto.jsonObjects.*
 
 interface JSONVisitor {
     fun visit(jsonObject: JSONObject)
     fun visit(jsonArray: JSONArray)
-    fun visit(jsonValue: JSONValue)
+    fun visit(jsonString: JSONString)
+    fun visit(jsonBoolean: JSONBoolean)
+    fun visit(jsonNumber: JSONNumber)
 }

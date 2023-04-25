@@ -9,8 +9,20 @@ class JSONArray : JSONElement {
         elements.add(element)
     }
 
+    fun remove(element: JSONElement) {
+        elements.remove(element)
+    }
+
+    fun removeAt(index : Int) {
+        elements.removeAt(index)
+    }
+
     fun get(index: Int): JSONElement? {
         return if (index in elements.indices) elements[index] else null
+    }
+
+    fun getAll():  List<JSONElement>{
+        return elements
     }
 
     fun size(): Int {
