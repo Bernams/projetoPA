@@ -1,3 +1,3 @@
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class JsonString
+annotation class JSONForceString

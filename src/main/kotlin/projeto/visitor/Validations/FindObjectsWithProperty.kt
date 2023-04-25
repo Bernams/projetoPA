@@ -15,6 +15,10 @@ class FindObjectsWithProperty(private val properties: List<String>) : JSONVisito
         }
     }
 
+    fun getFoundValues(): List<JSONObject> {
+        return found
+    }
+
     override fun visit(jsonArray: JSONArray) {
     }
 

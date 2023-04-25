@@ -24,6 +24,10 @@ class ValidateInscritosProperty : JSONVisitor {
         }
     }
 
+    fun getValidation(): Boolean {
+        return isValid
+    }
+
     override fun visit(jsonArray: JSONArray) {
     }
 

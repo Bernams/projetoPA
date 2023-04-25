@@ -11,6 +11,10 @@ class FindValuesWithProperty(private val property: String): JSONVisitor {
         jsonObject.get(property)?.let { found.add(it.toJSONString()) }
     }
 
+    fun getFoundValues(): List<String> {
+        return found
+    }
+
     override fun visit(jsonArray: JSONArray) {
     }
 
