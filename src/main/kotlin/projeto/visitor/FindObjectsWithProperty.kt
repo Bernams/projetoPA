@@ -1,11 +1,9 @@
 package projeto.visitor
 
 import JSONVisitor
-import projeto.jsonObjects.JSONArray
-import projeto.jsonObjects.JSONObject
-import projeto.jsonObjects.JSONValue
+import projeto.jsonObjects.*
 
-class findObjectsWithProperty(private val properties: List<String>) : JSONVisitor {
+class FindObjectsWithProperty(private val properties: List<String>) : JSONVisitor {
 
     private val found = mutableListOf<JSONObject>()
 
@@ -18,11 +16,15 @@ class findObjectsWithProperty(private val properties: List<String>) : JSONVisito
     }
 
     override fun visit(jsonArray: JSONArray) {
-
     }
 
-    override fun visit(jsonValue: JSONValue) {
+    override fun visit(jsonString: JSONString) {
+    }
 
+    override fun visit(jsonBoolean: JSONBoolean) {
+    }
+
+    override fun visit(jsonNumber: JSONNumber) {
     }
 
 }
