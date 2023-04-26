@@ -2,6 +2,7 @@ package projeto
 
 import JSONCustomKey
 import JSONExclude
+import JSONForceString
 import projeto.jsonObjects.*
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -29,11 +30,14 @@ class JSONReflector {
             else -> {
                 val jsonObject = JSONObject()
                 for (prop in obj::class.memberProperties) {
+                    if (prop.hasAnnotation<JSONExclude>()) continue
                     val name =
                         if (prop.hasAnnotation<JSONCustomKey>()) prop.findAnnotation<JSONCustomKey>()!!.identifier
                         else prop.name
-                    if (prop.hasAnnotation<JSONExclude>()) continue
-                    jsonObject.put(name, reflect(prop.getter.call(obj)))
+                    val value =
+                        if (prop.hasAnnotation<JSONForceString>()) prop.getter.call(obj).toString()
+                        else prop.getter.call(obj)
+                    jsonObject.put(name, reflect(value))
                 }
                 jsonObject
             }
