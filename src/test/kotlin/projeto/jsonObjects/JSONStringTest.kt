@@ -7,8 +7,8 @@ class JSONStringTest {
 
     @Test
     fun testStringCreation(){
-        val string = JSONString("Pacoh")
+        val string = JSONString("pacoh")
         assertEquals("pacoh",string.str)
-        assertEquals("pacoh", string.toJSONString())
+        assertEquals("\"pacoh\"", string.toJSONString())
     }
 }

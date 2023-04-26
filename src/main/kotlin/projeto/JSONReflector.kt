@@ -6,9 +6,9 @@ import kotlin.reflect.full.*
 class JSONReflector {
 
     fun reflect(obj : Any?) : JSONElement {
-        if( obj == null) return JSONString(null)
         when (obj) {
-            is String -> return JSONString(obj)
+            null -> return JSONString(null)
+            is String, is Char -> return JSONString(obj.toString())
             is Number -> return JSONNumber(obj)
             is Boolean -> return JSONBoolean(obj)
             is Enum<*> -> return JSONString(obj.name)
@@ -34,21 +34,3 @@ class JSONReflector {
         }
     }
 }
-
-/**
-fun createList(): List<Any?> {
-    return mutableListOf(1, 2, 3, 4, true, null, "asd", createMap())
-}
-
-fun createMap(): Map<String, Any?> {
-    return mapOf("test" to "value", "number" to 92448)
-}
-
-fun main() {
-    val list = createList()
-
-    val reflex = JSONReflector()
-    val jsonObject = reflex.reflect(list)
-    println(jsonObject.toJSONString())
-}
- **/
