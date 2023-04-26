@@ -6,8 +6,6 @@ import kotlin.test.assertEquals
 
 class JSONReflectorTest {
     enum class TestEnum { VALUE }
-
-
     private val reflector = JSONReflector()
 
     @Test
@@ -20,6 +18,12 @@ class JSONReflectorTest {
     fun stringTest() {
         val result = reflector.reflect("pa")
         assertEquals(JSONString("pa").toJSONString(), result.toJSONString())
+    }
+
+    @Test
+    fun charTest() {
+        val result = reflector.reflect('p')
+        assertEquals(JSONString("p").toJSONString(), result.toJSONString())
     }
 
     @Test
