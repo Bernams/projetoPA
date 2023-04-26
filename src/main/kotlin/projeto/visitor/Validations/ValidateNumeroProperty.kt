@@ -1,8 +1,8 @@
 package projeto.visitor.Validations
 
 import JSONVisitor
-import kotlin.reflect.KClass
 import projeto.jsonObjects.*
+import kotlin.reflect.KClass
 
 class ValidateNumeroProperty : JSONVisitor {
     var isValid = true
