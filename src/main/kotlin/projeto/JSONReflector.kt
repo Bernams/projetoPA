@@ -1,7 +1,9 @@
 package projeto
 
+import JSONExclude
 import projeto.jsonObjects.*
-import kotlin.reflect.full.*
+import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.memberProperties
 
 class JSONReflector {
 
@@ -24,7 +26,10 @@ class JSONReflector {
             }
             else -> {
                 val jsonObject = JSONObject()
-                obj::class.memberProperties.forEach { prop ->
+                for (prop in obj::class.memberProperties) {
+                    if (prop.hasAnnotation<JSONExclude>()) {
+                        continue
+                    }
                     val name = prop.name
                     val value = prop.getter.call(obj)
                     jsonObject.put(name, reflect(value))
