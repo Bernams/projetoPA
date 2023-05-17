@@ -65,18 +65,6 @@ class JSONObjectTest {
         root.put("data-exame", DATA_EXAME)
         root.put("inscritos", inscritos)
 
-        val visitor = FindValuesWithProperty("numero")
-        root.accept(visitor)
-
-        val visitor2 = FindObjectsWithProperty(listOf("numero","nome"))
-        root.accept(visitor2)
-
-        val visitor3 = ValidateNumeroProperty()
-        root.accept(visitor3)
-
-        val visitor4 = ValidateInscritosProperty()
-        root.accept(visitor4)
-
 
         val creator = JSONFileCreator("src/test/resources/PA.json")
         creator.writeToFile(root)
