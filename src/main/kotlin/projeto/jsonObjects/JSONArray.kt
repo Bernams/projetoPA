@@ -1,12 +1,17 @@
 package projeto.jsonObjects
 
 import JSONVisitor
+import projeto.Observable
+import projeto.Observer
 
-class JSONArray : JSONElement {
+class JSONArray : JSONElement, Observable {
     private val elements = mutableListOf<JSONElement>()
+
+    override val observers = arrayListOf<Observer>()
 
     fun add(element: JSONElement) {
         elements.add(element)
+        sendUpdateEvent()
     }
 
     fun remove(element: JSONElement) {

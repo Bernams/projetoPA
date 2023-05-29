@@ -46,7 +46,7 @@ class Editor {
             alignmentY = Component.TOP_ALIGNMENT
 
             add(ValueWidget("A", "um"))
-            add(CheckboxWidget("estrangeiro"))
+            add(CheckboxWidget("estrangeiro", true))
 
             // menu
             addMouseListener(object : MouseAdapter() {
@@ -54,22 +54,22 @@ class Editor {
                     if (SwingUtilities.isRightMouseButton(e)) {
                         val menu = JPopupMenu("Message")
                         val addValue = JButton("Add Value")
-                        val addBool = JButton("Add Boolean")
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            val value = JOptionPane.showInputDialog("Insert value:")
-                            add(ValueWidget(label, value))
-                            menu.isVisible = false
-                            revalidate()
-                            frame.repaint()
-                        }
-
-                        addBool.addActionListener {
-                            val label = JOptionPane.showInputDialog("Insert label:")
-                            add(CheckboxWidget(label))
+                            when (val value = JOptionPane.showInputDialog("Insert value:")) {
+                                "true" -> {
+                                    add(CheckboxWidget(label, true))
+                                }
+                                "false" -> {
+                                    add(CheckboxWidget(label, false))
+                                }
+                                else -> {
+                                    add(ValueWidget(label, value))
+                                }
+                            }
                             menu.isVisible = false
                             revalidate()
                             frame.repaint()
@@ -114,14 +114,14 @@ class Editor {
             add(text)
         }
 
-    fun CheckboxWidget(key: String) : JPanel =
+    fun CheckboxWidget(key: String, value: Boolean) : JPanel =
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
             add(JLabel(key))
-            val checkbox = JCheckBox()
+            val checkbox = JCheckBox("", value)
 
             checkbox.addFocusListener(object: FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
