@@ -1,16 +1,23 @@
 package projeto.jsonObjects
 
 import JSONVisitor
+import projeto.Observable
+import projeto.Observer
 
-class JSONObject : JSONElement {
-
+class JSONObject : JSONElement, Observable {
+    override val observers = arrayListOf<Observer>()
     //create a map with key JsonValue pairs
     private val map = mutableMapOf<String, JSONElement>()
-
 
     //put method to add to map
     fun put(key: String, jsonValue: JSONElement) {
         map[key] = jsonValue
+        sendUpdateEvent()
+    }
+
+    fun remove(key : String) {
+        map.remove(key)
+        sendUpdateEvent()
     }
 
     //size method to return size of map

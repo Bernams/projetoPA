@@ -1,3 +1,6 @@
+import projeto.Observable
+import projeto.Observer
+import projeto.jsonObjects.JSONObject
 import java.awt.Checkbox
 import java.awt.Component
 import java.awt.Dimension
@@ -10,7 +13,7 @@ fun main() {
     Editor().open()
 }
 
-class Editor {
+class Editor : Observer {
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
@@ -33,6 +36,10 @@ class Editor {
         srcArea.isEditable = false
         right.add(srcArea)
         add(right)
+    }
+
+    override fun update(o : Observable, arg : JSONObject) {
+
     }
 
     fun open() {

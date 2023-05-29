@@ -16,6 +16,7 @@ class JSONArray : JSONElement, Observable {
 
     fun remove(element: JSONElement) {
         elements.remove(element)
+        sendUpdateEvent()
     }
 
     fun removeAt(index : Int) {
