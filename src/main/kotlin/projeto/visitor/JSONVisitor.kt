@@ -6,4 +6,5 @@ interface JSONVisitor {
     fun visit(jsonString: JSONString)
     fun visit(jsonBoolean: JSONBoolean)
     fun visit(jsonNumber: JSONNumber)
+    fun visit(jsonNull: JSONNull)
 }

@@ -39,4 +39,7 @@ class ValidateInscritosProperty : JSONVisitor {
 
     override fun visit(jsonNumber: JSONNumber) {
     }
+
+    override fun visit(jsonNull: JSONNull) {
+    }
 }

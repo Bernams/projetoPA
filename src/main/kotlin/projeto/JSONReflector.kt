@@ -11,7 +11,7 @@ import kotlin.reflect.full.memberProperties
 class JSONReflector {
 
     fun reflect(obj : Any?) : JSONElement {
-        if(obj == null) return JSONString(null)
+        if(obj == null) return JSONNull()
         return when (obj) {
             is String, is Char -> JSONString(obj.toString())
             is Number -> JSONNumber(obj)
