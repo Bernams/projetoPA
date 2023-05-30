@@ -18,7 +18,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
     init {
         model.add(this)
     }
-
+    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
     val srcArea = JTextArea()
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -67,25 +67,16 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
 
-                        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
-
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
                             when (val value = JOptionPane.showInputDialog("Insert value:")) {
                                 "true" -> {
-                                    controller.editModel(true, label)
                                     add(CheckboxWidget(label, true))
                                 }
                                 "false" -> {
-                                    controller.editModel(false, label)
                                     add(CheckboxWidget(label, false))
                                 }
                                 else -> {
-                                    if(value.matches(regex)) {
-                                        controller.editModel(Integer.parseInt(value), label)
-                                    } else {
-                                        controller.editModel(value, label)
-                                    }
                                     add(ValueWidget(label, value))
                                 }
                             }
@@ -138,16 +129,22 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             })
         }
 
-    fun ValueWidget(key: String, value: String) : JPanel =
+    fun ValueWidget(label: String, value: String) : JPanel =
         JPanel().apply{
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
-            add(JLabel(key))
+            if(value.matches(regex)) {
+                controller.editModel(Integer.parseInt(value), label)
+            } else {
+                controller.editModel(value, label)
+            }
+            add(JLabel(label))
             val text = JTextField(value)
             text.addFocusListener(object: FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
+                    controller.editModel(text.text, label)
                     update()
                 }
             })
@@ -161,23 +158,30 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             alignmentY = Component.TOP_ALIGNMENT
 
             add(JLabel(key))
-
+            val panel = JPanel()
+            panel.layout = GridLayout()
+            val scrollPane = JScrollPane(appPanel()).apply {
+                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
+                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+            }
+            panel.add(scrollPane)
+            add(panel)
         }
 
-    fun CheckboxWidget(key: String, value: Boolean) : JPanel =
+    fun CheckboxWidget(label: String, value: Boolean) : JPanel =
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
-            add(JLabel(key))
+            add(JLabel(label))
             val checkbox = JCheckBox("", value)
+            controller.editModel(value, label)
 
-            checkbox.addFocusListener(object: FocusAdapter() {
-                override fun focusLost(e: FocusEvent) {
-                    update()
-                }
-            })
+            checkbox.addActionListener {
+                controller.editModel(checkbox.isSelected, label)
+                update()
+            }
             add(checkbox)
         }
 

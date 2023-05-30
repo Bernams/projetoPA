@@ -1,10 +1,7 @@
 package projeto.ui
 
-import View
-import projeto.JSONReflector
 import projeto.Model
 import projeto.jsonObjects.JSONArray
-import projeto.jsonObjects.JSONElement
 import projeto.jsonObjects.JSONObject
 
 class JSONEditorController(val jsonModel: Model) {
