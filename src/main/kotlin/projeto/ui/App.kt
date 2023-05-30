@@ -1,13 +1,8 @@
 import projeto.Model
-import projeto.Observable
 import projeto.Observer
-import projeto.jsonObjects.JSONBoolean
 import projeto.jsonObjects.JSONObject
 import projeto.ui.JSONEditorController
-import java.awt.Checkbox
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.GridLayout
+import java.awt.*
 import java.awt.event.*
 import javax.swing.*
 
@@ -62,9 +57,6 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
-            add(ValueWidget("A", "um"))
-            add(CheckboxWidget("estrangeiro", true))
-
             // menu
             addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent) {
@@ -74,21 +66,29 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
 
+                        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
                             val value = JOptionPane.showInputDialog("Insert value:")
                             when (value) {
                                 "true" -> {
+                                    controller.editModel(true, label)
                                     add(CheckboxWidget(label, true))
                                 }
                                 "false" -> {
+                                    controller.editModel(false, label)
                                     add(CheckboxWidget(label, false))
                                 }
                                 else -> {
+                                    if(value.matches(regex)) {
+                                        controller.editModel(Integer.parseInt(value), label)
+                                    } else {
+                                        controller.editModel(value, label)
+                                    }
                                     add(ValueWidget(label, value))
                                 }
                             }
-                            controller.editModel(value,  label)
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -97,6 +97,16 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
                         addArray.addActionListener {
 
+                        }
+
+                        addObject.addActionListener {
+                            val label = JOptionPane.showInputDialog("Insert label:")
+                            controller.editModel("asd", label)
+                            add(ObjectWidget(label))
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
                         }
                         /*
                         val del = JButton("delete all")
@@ -112,7 +122,11 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         menu.add(addValue)
                         menu.add(addArray)
                         menu.add(addObject)
-                        menu.show(this@apply, 100, 100);
+
+                        val location: Point = MouseInfo.getPointerInfo().location
+                        val x: Double = location.getX()
+                        val y: Double = location.getY()
+                        menu.show(this@apply, x.toInt(), y.toInt());
                     }
                 }
             })
@@ -128,10 +142,20 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             val text = JTextField(value)
             text.addFocusListener(object: FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    println("Perdeu foco: ${text.text}")
+                    update()
                 }
             })
             add(text)
+        }
+
+    fun ObjectWidget(key: String) : JPanel =
+        JPanel().apply{
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            add(JLabel(key))
+
         }
 
     fun CheckboxWidget(key: String, value: Boolean) : JPanel =
@@ -145,7 +169,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
             checkbox.addFocusListener(object: FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    println("Perdeu foco: ${checkbox.isSelected}")
+                    update()
                 }
             })
             add(checkbox)
