@@ -1,5 +1,6 @@
 import projeto.Model
 import projeto.Observer
+import projeto.jsonObjects.JSONArray
 import projeto.jsonObjects.JSONObject
 import projeto.ui.JSONEditorController
 import java.awt.*
@@ -96,12 +97,18 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         }
 
                         addArray.addActionListener {
-
+                            val label = JOptionPane.showInputDialog("Insert label:")
+                            controller.addArray(JSONArray(), label)
+                            add(ObjectWidget(label))
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
                         }
 
                         addObject.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            controller.editModel("asd", label)
+                            controller.addObject(JSONObject(), label)
                             add(ObjectWidget(label))
                             menu.isVisible = false
                             revalidate()
