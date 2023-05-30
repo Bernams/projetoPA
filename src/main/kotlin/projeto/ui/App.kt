@@ -1,6 +1,9 @@
+import projeto.Model
 import projeto.Observable
 import projeto.Observer
+import projeto.jsonObjects.JSONBoolean
 import projeto.jsonObjects.JSONObject
+import projeto.ui.JSONEditorController
 import java.awt.Checkbox
 import java.awt.Component
 import java.awt.Dimension
@@ -10,10 +13,17 @@ import javax.swing.*
 
 
 fun main() {
-    Editor().open()
+    val model = Model()
+    val controller = JSONEditorController(model)
+    View(model, controller).open()
 }
 
-class Editor : Observer {
+class View(val model : Model, val controller : JSONEditorController) : Observer {
+    init {
+        model.add(this)
+    }
+
+    val srcArea = JTextArea()
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
@@ -30,23 +40,23 @@ class Editor : Observer {
 
         val right = JPanel()
         right.layout = GridLayout()
-        val srcArea = JTextArea()
+
         srcArea.tabSize = 2
-        srcArea.text = "TODO"
+        srcArea.text = controller.printAll()
         srcArea.isEditable = false
         right.add(srcArea)
         add(right)
     }
 
-    override fun update(o : Observable, arg : JSONObject) {
-
+    override fun update() {
+        srcArea.text = controller.printAll()
     }
 
     fun open() {
         frame.isVisible = true
     }
 
-    fun appPanel(): JPanel =
+    private fun appPanel(): JPanel =
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -66,7 +76,8 @@ class Editor : Observer {
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            when (val value = JOptionPane.showInputDialog("Insert value:")) {
+                            val value = JOptionPane.showInputDialog("Insert value:")
+                            when (value) {
                                 "true" -> {
                                     add(CheckboxWidget(label, true))
                                 }
@@ -77,8 +88,10 @@ class Editor : Observer {
                                     add(ValueWidget(label, value))
                                 }
                             }
+                            controller.editModel(value,  label)
                             menu.isVisible = false
                             revalidate()
+                            update()
                             frame.repaint()
                         }
 
