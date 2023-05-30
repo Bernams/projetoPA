@@ -71,8 +71,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            val value = JOptionPane.showInputDialog("Insert value:")
-                            when (value) {
+                            when (val value = JOptionPane.showInputDialog("Insert value:")) {
                                 "true" -> {
                                     controller.editModel(true, label)
                                     add(CheckboxWidget(label, true))
@@ -131,8 +130,8 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         menu.add(addObject)
 
                         val location: Point = MouseInfo.getPointerInfo().location
-                        val x: Double = location.getX()
-                        val y: Double = location.getY()
+                        val x: Double = location.getX() - frame.location.x
+                        val y: Double = location.getY() - frame.location.y - 20
                         menu.show(this@apply, x.toInt(), y.toInt());
                     }
                 }
