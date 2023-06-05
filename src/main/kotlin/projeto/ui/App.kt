@@ -27,7 +27,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
         val left = JPanel()
         left.layout = GridLayout()
-        val scrollPane = JScrollPane(appPanel()).apply {
+        val scrollPane = JScrollPane(appPanel(model.jsonModel)).apply {
             horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
             verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
         }
@@ -52,7 +52,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
         frame.isVisible = true
     }
 
-    private fun appPanel(): JPanel =
+    private fun appPanel(context: JSONObject): JPanel =
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -71,15 +71,15 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val label = JOptionPane.showInputDialog("Insert label:")
                             when (val value = JOptionPane.showInputDialog("Insert value:")) {
                                 "true" -> {
-                                    add(controller.addCheckboxWidget(true, label, view))
+                                    add(controller.addCheckboxWidget(context, true, label, view))
                                     update()
                                 }
                                 "false" -> {
-                                    add(controller.addCheckboxWidget(false, label, view))
+                                    add(controller.addCheckboxWidget(context, false, label, view))
                                     update()
                                 }
                                 else -> {
-                                    add(controller.addValueWidget(label, value, view))
+                                    add(controller.addValueWidget(context, label, value, view))
                                 }
                             }
                             menu.isVisible = false
@@ -90,8 +90,9 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
                         addArray.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            controller.addArray(JSONArray(), label)
-                            add(ObjectWidget(label))
+                            val jsonArray = JSONArray()
+                            controller.addNestedArray(context, label, jsonArray)
+                            add(ArrayWidget(label, jsonArray))
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -100,24 +101,15 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
                         addObject.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
-                            controller.addObject(JSONObject(), label)
-                            add(ObjectWidget(label))
+                            val jsonObject = JSONObject()
+                            controller.addNestedObject(context, label, jsonObject)
+                            add(ObjectWidget(label, jsonObject))
                             menu.isVisible = false
                             revalidate()
                             update()
                             frame.repaint()
                         }
-                        /*
-                        val del = JButton("delete all")
-                        del.addActionListener {
-                            components.forEach {
-                                remove(it)
-                            }
-                            menu.isVisible = false
-                            revalidate()
-                            frame.repaint()
-                        }
-                        */
+
                         menu.add(addValue)
                         menu.add(addArray)
                         menu.add(addObject)
@@ -125,16 +117,85 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val location: Point = MouseInfo.getPointerInfo().location
                         val x: Double = location.getX() - frame.location.x
                         val y: Double = location.getY() - frame.location.y - 20
-                        menu.show(this@apply, x.toInt(), y.toInt());
+                        menu.show(this@apply, x.toInt(), y.toInt())
+                    }
+                }
+            })
+        }
+    private fun arrayPanel(context: JSONArray): JPanel =
+        JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            // menu
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        val menu = JPopupMenu("Message")
+                        val addValue = JButton("Add Value")
+                        val addArray = JButton("Add Array")
+                        val addObject = JButton("Add Object")
+
+                        addValue.addActionListener {
+                            val label = JOptionPane.showInputDialog("Insert label:")
+                            when (val value = JOptionPane.showInputDialog("Insert value:")) {
+                                "true" -> {
+                                    add(controller.addArrayCheckboxWidget(context, true,view ))
+                                    update()
+                                }
+                                "false" -> {
+                                    add(controller.addArrayCheckboxWidget(context, false, view))
+                                    update()
+                                }
+                                else -> {
+                                    add(controller.addArrayValueWidget(context, value, view))
+                                }
+                            }
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
+                        }
+
+                        addArray.addActionListener {
+                            val jsonArray = JSONArray()
+                            val label = JOptionPane.showInputDialog("Insert label:")
+                            controller.addArrayNestedArray(context,jsonArray)
+                            add(ArrayWidget(label, jsonArray))
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
+                        }
+
+                        addObject.addActionListener {
+                            val label = JOptionPane.showInputDialog("Insert label:")
+                            val jsonObject = JSONObject()
+                            controller.addArrayNestedObject(context, jsonObject)
+                            add(ObjectWidget(label,jsonObject))
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
+                        }
+
+                        menu.add(addValue)
+                        menu.add(addArray)
+                        menu.add(addObject)
+
+                        val location: Point = MouseInfo.getPointerInfo().location
+                        val x: Double = location.getX() - frame.location.x
+                        val y: Double = location.getY() - frame.location.y - 20
+                        menu.show(this@apply, x.toInt(), y.toInt())
                     }
                 }
             })
         }
 
 
-
-    fun ObjectWidget(key: String) : JPanel =
-        JPanel().apply{
+    fun ObjectWidget(key: String, jsonObject: JSONObject) : JPanel =
+        JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
@@ -142,7 +203,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             add(JLabel(key))
             val panel = JPanel()
             panel.layout = GridLayout()
-            val scrollPane = JScrollPane(appPanel()).apply {
+            val scrollPane = JScrollPane(appPanel(jsonObject)).apply {
                 horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
                 verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
             }
@@ -150,7 +211,22 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             add(panel)
         }
 
+    fun ArrayWidget(key: String, jsonArray: JSONArray) : JPanel =
+        JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
 
+            add(JLabel(key))
+            val panel = JPanel()
+            panel.layout = GridLayout()
+            val scrollPane = JScrollPane(arrayPanel(jsonArray)).apply {
+                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
+                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+            }
+            panel.add(scrollPane)
+            add(panel)
+        }
 
 }
 

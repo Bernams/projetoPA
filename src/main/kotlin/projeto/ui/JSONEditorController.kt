@@ -2,34 +2,54 @@ package projeto.ui
 
 import View
 import projeto.Model
-import projeto.jsonObjects.JSONArray
-import projeto.jsonObjects.JSONObject
+import projeto.jsonObjects.*
 import java.awt.Component
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.*
+import kotlin.collections.ArrayDeque
 
 class JSONEditorController(val jsonModel: Model) {
     private val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+    private val contextStack: ArrayDeque<JSONObject> = ArrayDeque<JSONObject>().also { it.add(jsonModel.jsonModel) }
 
-
-    fun editModel(obj : Any?, key: String) {
-        jsonModel.modifyJSON(obj, key)
+    fun addNestedObject(context: JSONObject, key: String, obj: JSONObject) {
+        context.put(key, obj)
     }
 
-    fun addObject(jsonObject: JSONObject,key: String){
-        jsonModel.addJsonObject(jsonObject, key)
+    fun addNestedArray(context: JSONObject, key: String, arr: JSONArray) {
+        context.put(key, arr)
     }
 
-    fun addArray(jsonArray: JSONArray,key: String){
-        jsonModel.addJsonArray(jsonArray, key)
+    fun addNestedValue(context: JSONObject, key: String, value: JSONElement) {
+        context.put(key, value)
     }
 
+    fun addArrayNestedObject(context: JSONArray, jsonObject: JSONObject) {
+        context.add(jsonObject)
+    }
+    fun addArrayNestedArray(context: JSONArray, jsonObject: JSONArray) {
+        context.add(jsonObject)
+    }
+
+    fun getCurrentContext(): JSONObject {
+        return contextStack.last()
+    }
+
+    fun pushContext(jsonObject: JSONObject) {
+        contextStack.add(jsonObject)
+    }
+
+    fun popContext() {
+        if (contextStack.size > 1) {
+            contextStack.removeLast()
+        }
+    }
     fun printAll() : String {
         return jsonModel.printJSON()
     }
 
-    fun addCheckboxWidget(value : Boolean, label: String, view : View) : JPanel {
+    fun addCheckboxWidget(context: JSONObject, value: Boolean, label: String, view: View): JPanel {
         return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -37,37 +57,77 @@ class JSONEditorController(val jsonModel: Model) {
 
             add(JLabel(label))
             val checkbox = JCheckBox("", value)
-            editModel(value, label)
+            addNestedValue(context, label, JSONBoolean(value))
 
             checkbox.addActionListener {
-                editModel(checkbox.isSelected, label)
+                addNestedValue(context, label, JSONBoolean(checkbox.isSelected))
                 view.update()
             }
             add(checkbox)
-
         }
     }
 
-    fun addValueWidget(label: String, value: String, view :  View) : JPanel =
-
-        JPanel().apply{
+    fun addArrayCheckboxWidget(context: JSONArray, value: Boolean, view: View): JPanel {
+        return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
-            if(value.matches(regex)) {
-                editModel(Integer.parseInt(value), label)
-            } else {
-                editModel(value, label)
+            val checkbox = JCheckBox("", value)
+            context.add(JSONBoolean(value))
+
+            checkbox.addActionListener {
+                context.add(JSONBoolean(checkbox.isSelected))
+                view.update()
             }
+            add(checkbox)
+        }
+    }
+
+    fun addValueWidget(context: JSONObject, label: String, value: String, view: View): JPanel {
+        return JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            if (value.matches(regex)) {
+                addNestedValue(context, label, JSONNumber(Integer.parseInt(value)))
+            } else {
+                addNestedValue(context, label, JSONString(value))
+            }
+
             add(JLabel(label))
             val text = JTextField(value)
-            text.addFocusListener(object: FocusAdapter() {
+            text.addFocusListener(object : FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    editModel(text.text, label)
+                    addNestedValue(context, label, JSONString(text.text))
                     view.update()
                 }
             })
             add(text)
         }
+    }
+
+    fun addArrayValueWidget(context: JSONArray, value: String, view: View): JPanel {
+        return JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            if (value.matches(regex)) {
+                context.add(JSONNumber(Integer.parseInt(value)))
+            } else {
+                context.add(JSONString(value))
+            }
+
+            val text = JTextField(value)
+            text.addFocusListener(object : FocusAdapter() {
+                override fun focusLost(e: FocusEvent) {
+                    context.add(JSONString(text.text))
+                    view.update()
+                }
+            })
+            add(text)
+        }
+    }
 }
