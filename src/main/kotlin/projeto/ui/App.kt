@@ -213,6 +213,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
 
 
     fun ObjectWidget(key: String, jsonObject: JSONObject) : JPanel =
+
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
