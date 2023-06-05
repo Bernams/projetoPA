@@ -50,6 +50,12 @@ class JSONEditorController(val jsonModel: Model) {
     }
 
     fun addCheckboxWidget(context: JSONObject, value: Boolean, label: String, view: View): JPanel {
+        var newLabel = label
+        var counter = 1
+        while(context.getProperties().contains(newLabel)){
+            newLabel = label.plus("($counter)")
+            counter++
+        }
         return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -85,22 +91,28 @@ class JSONEditorController(val jsonModel: Model) {
     }
 
     fun addValueWidget(context: JSONObject, label: String, value: String, view: View): JPanel {
+        var newLabel = label
+        var counter = 1
+        while(context.getProperties().contains(newLabel)){
+            newLabel = label.plus("($counter)")
+            counter++
+        }
         return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
             if (value.matches(regex)) {
-                addNestedValue(context, label, JSONNumber(Integer.parseInt(value)))
+                addNestedValue(context, newLabel, JSONNumber(Integer.parseInt(value)))
             } else {
-                addNestedValue(context, label, JSONString(value))
+                addNestedValue(context, newLabel, JSONString(value))
             }
 
-            add(JLabel(label))
+            add(JLabel(newLabel))
             val text = JTextField(value)
             text.addFocusListener(object : FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    addNestedValue(context, label, JSONString(text.text))
+                    addNestedValue(context, newLabel, JSONString(text.text))
                     view.update()
                 }
             })
@@ -109,6 +121,7 @@ class JSONEditorController(val jsonModel: Model) {
     }
 
     fun addArrayValueWidget(context: JSONArray, value: String, view: View): JPanel {
+
         return JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
