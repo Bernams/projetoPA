@@ -18,7 +18,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
     init {
         model.add(this)
     }
-    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+    val view = this
     val srcArea = JTextArea()
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -71,13 +71,15 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val label = JOptionPane.showInputDialog("Insert label:")
                             when (val value = JOptionPane.showInputDialog("Insert value:")) {
                                 "true" -> {
-                                    add(CheckboxWidget(label, true))
+                                    add(controller.addCheckboxWidget(true, label, view))
+                                    update()
                                 }
                                 "false" -> {
-                                    add(CheckboxWidget(label, false))
+                                    add(controller.addCheckboxWidget(false, label, view))
+                                    update()
                                 }
                                 else -> {
-                                    add(ValueWidget(label, value))
+                                    add(controller.addValueWidget(label, value, view))
                                 }
                             }
                             menu.isVisible = false
@@ -129,27 +131,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             })
         }
 
-    fun ValueWidget(label: String, value: String) : JPanel =
-        JPanel().apply{
-            layout = BoxLayout(this, BoxLayout.X_AXIS)
-            alignmentX = Component.LEFT_ALIGNMENT
-            alignmentY = Component.TOP_ALIGNMENT
 
-            if(value.matches(regex)) {
-                controller.editModel(Integer.parseInt(value), label)
-            } else {
-                controller.editModel(value, label)
-            }
-            add(JLabel(label))
-            val text = JTextField(value)
-            text.addFocusListener(object: FocusAdapter() {
-                override fun focusLost(e: FocusEvent) {
-                    controller.editModel(text.text, label)
-                    update()
-                }
-            })
-            add(text)
-        }
 
     fun ObjectWidget(key: String) : JPanel =
         JPanel().apply{
@@ -168,22 +150,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             add(panel)
         }
 
-    fun CheckboxWidget(label: String, value: Boolean) : JPanel =
-        JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.X_AXIS)
-            alignmentX = Component.LEFT_ALIGNMENT
-            alignmentY = Component.TOP_ALIGNMENT
 
-            add(JLabel(label))
-            val checkbox = JCheckBox("", value)
-            controller.editModel(value, label)
-
-            checkbox.addActionListener {
-                controller.editModel(checkbox.isSelected, label)
-                update()
-            }
-            add(checkbox)
-        }
 
 }
 
