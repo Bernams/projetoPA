@@ -66,6 +66,8 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val addValue = JButton("Add Value")
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
+                        val undo = JButton("Undo")
+                        val delete = JButton("Delete Component")
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
@@ -110,9 +112,22 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             frame.repaint()
                         }
 
+                        delete.addActionListener {
+
+                        }
+
+                        undo.addActionListener {
+
+                            revalidate()
+                            update()
+                            frame.repaint()
+                        }
+
                         menu.add(addValue)
                         menu.add(addArray)
                         menu.add(addObject)
+                        menu.add(undo)
+                        menu.add(delete)
 
                         val location: Point = MouseInfo.getPointerInfo().location
                         val x: Double = location.getX() - frame.location.x
@@ -124,7 +139,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
         }
     private fun arrayPanel(context: JSONArray): JPanel =
         JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            layout = FlowLayout(FlowLayout.CENTER)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
@@ -136,6 +151,8 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val addValue = JButton("Add Value")
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
+
+                        val delete = JButton("Delete")
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
@@ -183,6 +200,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         menu.add(addValue)
                         menu.add(addArray)
                         menu.add(addObject)
+                        menu.add(delete)
 
                         val location: Point = MouseInfo.getPointerInfo().location
                         val x: Double = location.getX() - frame.location.x
@@ -206,6 +224,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             val scrollPane = JScrollPane(appPanel(jsonObject)).apply {
                 horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
                 verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+                preferredSize = Dimension(200, 100)
             }
             panel.add(scrollPane)
             add(panel)
@@ -223,6 +242,8 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
             val scrollPane = JScrollPane(arrayPanel(jsonArray)).apply {
                 horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
                 verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+                preferredSize = Dimension(200, 100)
+
             }
             panel.add(scrollPane)
             add(panel)

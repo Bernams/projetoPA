@@ -4,6 +4,8 @@ import View
 import projeto.Model
 import projeto.jsonObjects.*
 import java.awt.Component
+import java.awt.Dimension
+import java.awt.FlowLayout
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.*
@@ -86,7 +88,7 @@ class JSONEditorController(val jsonModel: Model) {
 
     fun addValueWidget(context: JSONObject, label: String, value: String, view: View): JPanel {
         return JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            layout = FlowLayout(FlowLayout.LEADING)
             alignmentX = Component.LEFT_ALIGNMENT
             alignmentY = Component.TOP_ALIGNMENT
 
@@ -95,7 +97,6 @@ class JSONEditorController(val jsonModel: Model) {
             } else {
                 addNestedValue(context, label, JSONString(value))
             }
-
             add(JLabel(label))
             val text = JTextField(value)
             text.addFocusListener(object : FocusAdapter() {
