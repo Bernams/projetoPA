@@ -6,6 +6,7 @@ import projeto.jsonObjects.*
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.FlowLayout
+import java.awt.GridLayout
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.*
@@ -145,4 +146,45 @@ class JSONEditorController(val jsonModel: Model) {
             add(text)
         }
     }
+
+    fun addObjectWidget(key: String, jsonObject: JSONObject, view : View) : JPanel {
+        return JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            add(JLabel(key))
+            val panel = JPanel()
+            panel.layout = GridLayout()
+            val scrollPane = JScrollPane(view.appPanel(jsonObject)).apply {
+                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
+                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+                preferredSize = Dimension(200, 100)
+            }
+            panel.add(scrollPane)
+            add(panel)
+        }
+    }
+
+    fun addArrayWidget(key: String, jsonArray: JSONArray, view : View) : JPanel =
+        JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            alignmentX = Component.LEFT_ALIGNMENT
+            alignmentY = Component.TOP_ALIGNMENT
+
+            add(JLabel(key))
+            val panel = JPanel()
+            panel.layout = GridLayout()
+            val scrollPane = JScrollPane(view.arrayPanel(jsonArray)).apply {
+                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
+                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+                preferredSize = Dimension(200, 100)
+
+            }
+            panel.add(scrollPane)
+            add(panel)
+        }
+
+
+
 }

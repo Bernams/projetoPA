@@ -52,7 +52,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
         frame.isVisible = true
     }
 
-    private fun appPanel(context: JSONObject): JPanel =
+    fun appPanel(context: JSONObject): JPanel =
         JPanel().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -94,7 +94,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val label = JOptionPane.showInputDialog("Insert label:")
                             val jsonArray = JSONArray()
                             controller.addNestedArray(context, label, jsonArray)
-                            add(ArrayWidget(label, jsonArray))
+                            add(controller.addArrayWidget(label, jsonArray, view))
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -105,7 +105,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val label = JOptionPane.showInputDialog("Insert label:")
                             val jsonObject = JSONObject()
                             controller.addNestedObject(context, label, jsonObject)
-                            add(ObjectWidget(label, jsonObject))
+                            add(controller.addObjectWidget(label, jsonObject, view))
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -137,7 +137,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                 }
             })
         }
-    private fun arrayPanel(context: JSONArray): JPanel =
+    fun arrayPanel(context: JSONArray): JPanel =
         JPanel().apply {
             layout = FlowLayout(FlowLayout.CENTER)
             alignmentX = Component.LEFT_ALIGNMENT
@@ -179,7 +179,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val jsonArray = JSONArray()
                             val label = JOptionPane.showInputDialog("Insert label:")
                             controller.addArrayNestedArray(context,jsonArray)
-                            add(ArrayWidget(label, jsonArray))
+                            add(controller.addArrayWidget(label, jsonArray, view))
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -190,7 +190,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             val label = JOptionPane.showInputDialog("Insert label:")
                             val jsonObject = JSONObject()
                             controller.addArrayNestedObject(context, jsonObject)
-                            add(ObjectWidget(label,jsonObject))
+                            add(controller.addObjectWidget(label,jsonObject, view))
                             menu.isVisible = false
                             revalidate()
                             update()
@@ -212,43 +212,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
         }
 
 
-    fun ObjectWidget(key: String, jsonObject: JSONObject) : JPanel =
 
-        JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.X_AXIS)
-            alignmentX = Component.LEFT_ALIGNMENT
-            alignmentY = Component.TOP_ALIGNMENT
-
-            add(JLabel(key))
-            val panel = JPanel()
-            panel.layout = GridLayout()
-            val scrollPane = JScrollPane(appPanel(jsonObject)).apply {
-                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
-                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
-                preferredSize = Dimension(200, 100)
-            }
-            panel.add(scrollPane)
-            add(panel)
-        }
-
-    fun ArrayWidget(key: String, jsonArray: JSONArray) : JPanel =
-        JPanel().apply {
-            layout = BoxLayout(this, BoxLayout.X_AXIS)
-            alignmentX = Component.LEFT_ALIGNMENT
-            alignmentY = Component.TOP_ALIGNMENT
-
-            add(JLabel(key))
-            val panel = JPanel()
-            panel.layout = GridLayout()
-            val scrollPane = JScrollPane(arrayPanel(jsonArray)).apply {
-                horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
-                verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
-                preferredSize = Dimension(200, 100)
-
-            }
-            panel.add(scrollPane)
-            add(panel)
-        }
 
 }
 
