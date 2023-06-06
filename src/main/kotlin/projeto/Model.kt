@@ -9,18 +9,6 @@ class Model : Observable {
 
     var jsonModel = JSONObject()
 
-    fun modifyJSON(obj : Any?, key : String) {
-        jsonModel.put(key, JSONReflector().reflect(obj))
-    }
-
-    fun addJsonObject(obj : JSONObject, key : String) {
-        jsonModel.put(key, obj)
-    }
-
-    fun addJsonArray(obj: JSONArray, key: String) {
-        jsonModel.put(key, obj)
-    }
-
     override fun add(observer: Observer) {
         observers.add(observer)
     }
@@ -35,6 +23,58 @@ class Model : Observable {
 
     fun printJSON() : String {
         return jsonModel.toJSONString()
+    }
+
+    fun addNestedObject(context: JSONObject, key: String, obj: JSONObject) {
+        var newLabel = key
+        var counter = 1
+        while(context.getProperties().contains(newLabel)){
+            newLabel = key.plus("($counter)")
+            counter++
+        }
+        context.put(newLabel, obj)
+    }
+
+    fun removeNestedObject(context: JSONObject) {
+        val propertiesToRemove = mutableListOf<String>()
+
+        for (property in context.getProperties()) {
+            val value = context.get(property)
+            if (value is JSONObject) {
+                removeNestedObject(value)
+            }
+            propertiesToRemove.add(property)
+        }
+
+        for (property in propertiesToRemove) {
+            context.remove(property)
+        }
+    }
+
+    fun addNestedArray(context: JSONObject, key: String, arr: JSONArray) {
+        var newLabel = key
+        var counter = 1
+        while(context.getProperties().contains(newLabel)){
+            newLabel = key.plus("($counter)")
+            counter++
+        }
+        context.put(newLabel, arr)
+    }
+
+    fun addNestedValue(context: JSONObject, key: String, value: JSONElement) {
+        context.put(key, value)
+    }
+
+    fun addArrayNestedObject(context: JSONArray, jsonObject: JSONObject) {
+        context.add(jsonObject)
+    }
+
+    fun addArrayNestedArray(context: JSONArray, jsonObject: JSONArray) {
+        context.add(jsonObject)
+    }
+
+    fun addArrayValue(context: JSONArray, value: JSONElement) {
+        context.add(value)
     }
 
 }
