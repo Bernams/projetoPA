@@ -3,19 +3,14 @@ package projeto.visitor.Validations
 import JSONVisitor
 import projeto.jsonObjects.*
 
-class FindObjectsWithProperty(private val properties: List<String>) : JSONVisitor {
-
-    private val found = mutableListOf<JSONObject>()
+class FindValuesWithKey(private val key: String): JSONVisitor {
+    private val found = mutableListOf<String>()
 
     override fun visit(jsonObject: JSONObject) {
-        jsonObject.getProperties().containsAll(properties).let {
-            if (it) {
-                found.add(jsonObject)
-            }
-        }
+        jsonObject.get(key)?.let { found.add(it.toJSONString()) }
     }
 
-    fun getFoundValues(): List<JSONObject> {
+    fun getFound(): List<String> {
         return found
     }
 

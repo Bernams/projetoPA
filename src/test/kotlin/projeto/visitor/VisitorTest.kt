@@ -2,8 +2,8 @@ package projeto.visitor
 
 import org.junit.jupiter.api.Test
 import projeto.jsonObjects.*
-import projeto.visitor.Validations.FindObjectsWithProperty
-import projeto.visitor.Validations.FindValuesWithProperty
+import projeto.visitor.Validations.FindObjectsWithKey
+import projeto.visitor.Validations.FindValuesWithKey
 import projeto.visitor.Validations.ValidateInscritosProperty
 import projeto.visitor.Validations.ValidateNumeroProperty
 import kotlin.test.assertEquals
@@ -59,12 +59,12 @@ class VisitorTest {
 
 
     @Test
-    fun testFindObjectsWithProperty() {
+    fun testFindObjectsWithKeyvvaF() {
         val jsonObject = createJsonObject()
 
-        val visitor = FindObjectsWithProperty(listOf("numero","nome"))
+        val visitor = FindObjectsWithKey(listOf("numero","nome"))
         jsonObject.accept(visitor)
-        assertEquals(visitor.getFoundValues().size, 3)
+        assertEquals(visitor.getFound().size, 3)
 
     }
 
@@ -72,9 +72,9 @@ class VisitorTest {
     fun testFindValuesWithProperty() {
         val jsonObject = createJsonObject()
 
-        val visitor = FindValuesWithProperty("numero")
+        val visitor = FindValuesWithKey("numero")
         jsonObject.accept(visitor)
-        assertEquals(visitor.getFoundValues().size, 3)
+        assertEquals(visitor.getFound().size, 3)
 
     }
     @Test
