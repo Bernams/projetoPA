@@ -371,12 +371,17 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             text.maximumSize = Dimension(Integer.MAX_VALUE, 100)
             text.addFocusListener(object : FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    if (text.text == ""){
-                        controller.handleAddNestedValue(context, newLabel, JSONNull())
-                    }else {
-                        controller.handleAddNestedValue(context, newLabel, JSONString(text.text))
+                    if (text.text.matches(regex)) {
+                        val new_value = text.text.toBigDecimal()
+                        controller.handleAddNestedValue(context, newLabel, JSONNumber(new_value))
+                    } else {
+                        if (text.text == "") {
+                            controller.handleAddNestedValue(context, newLabel, JSONNull())
+                        } else {
+                            controller.handleAddNestedValue(context, newLabel, JSONString(text.text))
+                        }
+                        view.update()
                     }
-                    view.update()
                 }
             })
             add(text)
@@ -403,8 +408,17 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             text.maximumSize = Dimension(Integer.MAX_VALUE, 100)
             text.addFocusListener(object : FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    context.add(JSONString(text.text))
-                    view.update()
+                    if (text.text.matches(regex)) {
+                        val new_value = text.text.toBigDecimal()
+                        controller.handleAddArrayNestedValue(context, JSONNumber(new_value))
+                    } else {
+                        if (text.text == "") {
+                            controller.handleAddArrayNestedValue(context, JSONNull())
+                        } else {
+                            controller.handleAddArrayNestedValue(context, JSONString(text.text))
+                        }
+                        view.update()
+                    }
                 }
             })
             add(text)

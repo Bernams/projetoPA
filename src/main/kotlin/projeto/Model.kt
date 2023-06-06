@@ -104,6 +104,10 @@ class Model : Observable {
         context.put(key, value)
     }
 
+    fun addNestedArrayValue(context: JSONArray, value: JSONElement) {
+        context.add(value)
+    }
+
     fun addArrayNestedObject(context: JSONArray, jsonObject: JSONObject) {
         context.add(jsonObject)
     }
