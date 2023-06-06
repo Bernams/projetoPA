@@ -3,14 +3,21 @@ package projeto.ui
 import projeto.Model
 import projeto.jsonObjects.*
 
-class JSONEditorController(val jsonModel: Model) {
+class JSONEditorController(private val jsonModel: Model) {
 
     fun handleAddNestedObject(context: JSONObject, key: String, obj: JSONObject) {
-        jsonModel.addNestedObject(context, key, obj)
-    }
+        val command = AddNestedObjectCommand(jsonModel, context, key, obj)
+        jsonModel.executeCommand(command)    }
 
     fun handleRemoveNestedObject(context: JSONObject) {
         jsonModel.removeNestedObject(context)
+    }
+
+    fun undo() {
+        jsonModel.undo()
+    }
+    fun handleRemoveNestedArray(context: JSONArray) {
+        jsonModel.removeNestedArray(context)
     }
 
     fun handleAddNestedArray(context: JSONObject, key: String, arr: JSONArray) {
