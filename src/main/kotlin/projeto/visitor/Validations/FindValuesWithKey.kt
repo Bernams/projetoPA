@@ -6,7 +6,6 @@ import projeto.jsonObjects.*
 class FindValuesWithKey(private val key: String): JSONVisitor {
     private val found = mutableListOf<String>()
 
-
     override fun visit(jsonObject: JSONObject) {
         jsonObject.get(key)?.let { found.add(it.toJSONString()) }
     }

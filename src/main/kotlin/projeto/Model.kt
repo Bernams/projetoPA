@@ -1,17 +1,15 @@
 package projeto
 
-import projeto.ui.Command
 import projeto.jsonObjects.JSONArray
 import projeto.jsonObjects.JSONElement
 import projeto.jsonObjects.JSONObject
+import projeto.ui.Command
 import java.util.*
 
 class Model : Observable {
+
     override val observers = arrayListOf<Observer>()
-
     var jsonModel = JSONObject()
-
-
     private val commandStack = Stack<Command>()
 
     fun executeCommand(command: Command) {
@@ -27,6 +25,7 @@ class Model : Observable {
             sendUpdateEvent()
         }
     }
+
     override fun add(observer: Observer) {
         observers.add(observer)
     }
@@ -68,6 +67,7 @@ class Model : Observable {
             context.remove(property)
         }
     }
+
     fun removeNestedObjectWithKey(context: JSONObject, key : String) {
         context.remove(key)
     }

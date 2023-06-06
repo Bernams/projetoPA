@@ -5,6 +5,7 @@ import projeto.jsonObjects.*
 import kotlin.reflect.KClass
 
 class ValidateNumeroProperty : JSONVisitor {
+
     var isValid = true
     private val expectedType: KClass<*> = JSONNumber::class
 

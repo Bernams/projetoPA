@@ -22,11 +22,13 @@ class JSONReflector {
                 obj.forEach{jsonArray.add(reflect(it))}
                 jsonArray
             }
+
             is Map<*, *> -> {
                 val jsonObject = JSONObject()
                 obj.forEach { (k, v) -> jsonObject.put(k.toString(), reflect(v)) }
                 jsonObject
             }
+
             else -> {
                 val jsonObject = JSONObject()
                 for (prop in obj::class.memberProperties) {

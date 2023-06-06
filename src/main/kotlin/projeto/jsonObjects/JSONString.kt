@@ -1,7 +1,6 @@
 package projeto.jsonObjects
 
 import JSONVisitor
-import projeto.Observable
 
 class JSONString(val str: String?) : JSONElement {
 

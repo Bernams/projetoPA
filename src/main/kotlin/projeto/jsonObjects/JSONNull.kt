@@ -4,7 +4,6 @@ import JSONVisitor
 
 class JSONNull() : JSONElement {
 
-
     override fun toJSONString(indent: Int): String {
         return "null"
     }

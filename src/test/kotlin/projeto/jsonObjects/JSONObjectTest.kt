@@ -20,7 +20,7 @@ class JSONObjectTest {
     }
 
     @Test
-    fun pacoh() {
+    fun testJSONObjectStructure() {
         val inscritos = JSONArray()
 
         val root = JSONObject()

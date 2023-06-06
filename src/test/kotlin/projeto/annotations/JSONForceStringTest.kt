@@ -1,12 +1,9 @@
 package projeto.annotations
 
-import JSONCustomKey
-import JSONExclude
 import JSONForceString
 import org.junit.jupiter.api.Test
 import projeto.JSONReflector
 import projeto.jsonObjects.JSONBoolean
-import projeto.jsonObjects.JSONNumber
 import projeto.jsonObjects.JSONObject
 import projeto.jsonObjects.JSONString
 import kotlin.test.assertEquals

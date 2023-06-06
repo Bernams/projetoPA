@@ -1,7 +1,6 @@
 package projeto.annotations
 
 import JSONCustomKey
-import JSONForceString
 import org.junit.jupiter.api.Test
 import projeto.JSONReflector
 import projeto.jsonObjects.JSONBoolean
