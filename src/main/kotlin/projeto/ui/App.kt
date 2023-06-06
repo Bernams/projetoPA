@@ -4,9 +4,11 @@ import projeto.Model
 import projeto.Observer
 import projeto.jsonObjects.*
 import java.awt.*
-import java.awt.event.*
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.*
-
 
 fun main() {
     val model = Model()
@@ -29,11 +31,14 @@ class AddNestedObjectCommand(private val model: Model, private val context: JSON
 }
 
 class View(private val model : Model, val controller : JSONEditorController) : Observer {
+
     init {
         model.add(this)
     }
+
     val view = this
     private val srcArea = JTextArea()
+
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
@@ -157,6 +162,7 @@ class View(private val model : Model, val controller : JSONEditorController) : O
                 }
             })
         }
+
     fun arrayPanel(context: JSONArray): JPanel =
         JPanel().apply {
             layout = BoxLayout(this,BoxLayout.Y_AXIS)
@@ -253,13 +259,14 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             val panel = JPanel()
             panel.layout = GridLayout()
             panel.preferredSize = Dimension(Integer.MAX_VALUE, 100)
+
             val scrollPane = JScrollPane(view.arrayPanel(jsonArray)).apply {
                 horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
                 verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
                 preferredSize = Dimension(Integer.MAX_VALUE, 100)
                 maximumSize = Dimension(Integer.MAX_VALUE, 100)
-
             }
+
             panel.add(scrollPane)
             add(panel)
         }
@@ -280,12 +287,14 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             val panel = JPanel()
             panel.layout = GridLayout()
             panel.preferredSize = Dimension(Integer.MAX_VALUE, 100)
+
             val scrollPane = JScrollPane(view.appPanel(jsonObject)).apply {
                 horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
                 verticalScrollBarPolicy = JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
                 preferredSize = Dimension(Integer.MAX_VALUE, 100)
                 maximumSize = Dimension(Integer.MAX_VALUE, 100)
             }
+
             panel.add(scrollPane)
             add(panel)
         }

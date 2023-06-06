@@ -5,11 +5,11 @@ import projeto.Observable
 import projeto.Observer
 
 class JSONObject : JSONElement, Observable {
+
     override val observers = arrayListOf<Observer>()
-    //create a map with key JsonValue pairs
+
     private val map = mutableMapOf<String, JSONElement>()
 
-    //put method to add to map
     fun put(key: String, jsonValue: JSONElement) {
         map[key] = jsonValue
         sendUpdateEvent()
@@ -20,14 +20,10 @@ class JSONObject : JSONElement, Observable {
         sendUpdateEvent()
     }
 
-
-
-    //size method to return size of map
     fun size(): Int {
         return map.size
     }
 
-    //get method to return value of key
     fun get(key: String): JSONElement? {
         return map[key]
     }
@@ -40,6 +36,7 @@ class JSONObject : JSONElement, Observable {
         visitor.visit(this)
         map.values.forEach { it.accept(visitor) }
     }
+
     override fun toJSONString(indent: Int): String {
         if (map.isEmpty()) return "{}"
 

@@ -7,7 +7,6 @@ import projeto.visitor.Validations.FindValuesWithProperty
 import projeto.visitor.Validations.ValidateInscritosProperty
 import projeto.visitor.Validations.ValidateNumeroProperty
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class VisitorTest {

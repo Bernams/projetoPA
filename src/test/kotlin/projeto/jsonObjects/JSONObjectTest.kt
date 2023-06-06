@@ -3,10 +3,6 @@ package projeto.jsonObjects
 import JSONFileCreator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import projeto.visitor.Validations.FindObjectsWithProperty
-import projeto.visitor.Validations.FindValuesWithProperty
-import projeto.visitor.Validations.ValidateInscritosProperty
-import projeto.visitor.Validations.ValidateNumeroProperty
 
 class JSONObjectTest {
 
@@ -24,7 +20,7 @@ class JSONObjectTest {
     }
 
     @Test
-    fun pacoh() {
+    fun testJSONObjectStructure() {
         val inscritos = JSONArray()
 
         val root = JSONObject()

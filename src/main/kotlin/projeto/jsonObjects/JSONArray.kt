@@ -5,6 +5,7 @@ import projeto.Observable
 import projeto.Observer
 
 class JSONArray : JSONElement, Observable {
+
     private val elements = mutableListOf<JSONElement>()
 
     override val observers = arrayListOf<Observer>()

@@ -1,8 +1,5 @@
 package projeto
 
-import JSONCustomKey
-import JSONExclude
-import JSONForceString
 import projeto.jsonObjects.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
