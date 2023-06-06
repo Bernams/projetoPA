@@ -7,9 +7,9 @@ Projeto desenvolvido por:
 All the JSONObjects implement the JSONElement interface. Every class that implements the JSONElement should have the following methods defined:
 
 - toJSONString(indent : Int = 0) : String
-    - This method can accept an indent value that is used for the indentation in the JSON itself. It has the default value of no-indent (0).
+  - This method can accept an indent value that is used for the indentation in the JSON itself. It has the default value of no-indent (0).
 - accept(visitor : JSONVisitor)
-    - This method is used for the visitors.
+  - This method is used for the visitors.
 
 ### JSONString
 
@@ -133,11 +133,11 @@ jsonObject.remove("title")
 
 You may choose to use the following annotations
 
-| Annotation | Description |
-| --- | --- |
-| @JSONExclude | This annotation will exclude a specific attribute from the Reflector.reflect() |
-| @JSONForceString | This annotation will force a specific attribute to be a String from the Reflector.reflect() |
-| @JSONCustomKey | This annotation will create a custom attribute’s key instead of the one defined when instanciated |
+| Annotation       | Description                                                                                       |
+|------------------|---------------------------------------------------------------------------------------------------|
+| @JSONExclude     | This annotation will exclude a specific attribute from the Reflector.reflect()                    |
+| @JSONForceString | This annotation will force a specific attribute to be a String from the Reflector.reflect()       |
+| @JSONCustomKey   | This annotation will create a custom attribute’s key instead of the one defined when instanciated |
 
 ```kotlin
 data class TestData(val a: String,@JSONCustomKey("TESTE") val b: Int, val c: Boolean)
@@ -165,7 +165,7 @@ queryVisitor.getFound()
 queryVisitor.getFound().size // returns the number of found values
 ```
 
-To display the objects found with both the keys “title” and “year” inside of it you must use the method getFound(). A list of objects will be returned and so normal list operations can be used (E.g ****size****)
+To display the objects found with both the keys “title” and “year” inside of it you must use the method getFound(). A list of objects will be returned and so normal list operations can be used (e.g. ****size****)
 
 ### Find values with key
 
@@ -175,13 +175,13 @@ This validation is similar to the one described above but intead of returning th
 val rootObject = JSONObject()
 // ... define the object here
 
-val queryVisitor =.FindValuesWithKey("title")
+val queryVisitor = FindValuesWithKey("title")
 jsonObject.accept(queryVisitor)
 
 queryVisitor.getFound() // returns List("Projeto PA")
 ```
 
-To display the values found with the key “title” you must use the method getFound(). A list of objects will be returned and so normal list operations can be used (E.g ****size****)
+To display the values found with the key “title” you must use the method getFound(). A list of objects will be returned and so normal list operations can be used (e.g. ****size****)
 
 ### Validate inscritos property
 
@@ -191,7 +191,7 @@ This validation applies to the JSONArray of key “inscritos” and validates wh
 val rootObject = JSONObject()
 // ... define the object here
 
-val queryVisitor =.ValidateInscritosProperty()
+val queryVisitor = ValidateInscritosProperty()
 jsonObject.accept(queryVisitor)
 
 queryVisitor.getValidation() // returns True/False
@@ -205,7 +205,7 @@ This validation approves whether the “number” property is in fact a number o
 val rootObject = JSONObject()
 // ... define the object here
 
-val queryVisitor =.ValidateNumeroProperty()
+val queryVisitor = ValidateNumeroProperty()
 jsonObject.accept(queryVisitor)
 
 queryVisitor.getValidation() // returns True/False
@@ -213,10 +213,29 @@ queryVisitor.getValidation() // returns True/False
 
 ## JSONReflector
 
-You can infer the JSONElement from every type using the JSONReflector class. For example, you can input any Iterable element and it will make the adaptation for JSONArray.
+You can infer the JSONElement from every type using the JSONReflector class. For example, you can input any Iterable element, and it will make the adaptation for JSONArray.
 
 ```kotlin
 val list = listOf("Projeto PA", 2023)
 val result = reflector.reflect(list)
 // returns a JSONArray(JSONString("Projeto PA", JSONNumber(2023))
+```
+
+### Usage Example
+
+You can use the Reflector class to implement your own data classes directly and automatically return the JSON text or the JSONElements.
+
+```kotlin
+// example dataclass
+data class ExampleDataClass(val nome: String, val numero: Int, val internacional: Boolean)
+val obj = ExampleDataClass("Miguel Aguiar", 92448, false)
+
+// instanciate reflector
+val reflector = JSONReflector()
+
+// call reflect method that will return the JSONElements
+val result = reflector.reflect(obj)
+
+// to get the json text you can call this method
+result.toJSONString()
 ```
