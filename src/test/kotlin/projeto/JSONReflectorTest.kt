@@ -11,7 +11,7 @@ class JSONReflectorTest {
     @Test
     fun nullObjectTest() {
         val result = reflector.reflect(null)
-        assertEquals(JSONString(null).toJSONString(), result.toJSONString())
+        assertEquals("null", result.toJSONString())
     }
 
     @Test
