@@ -1,7 +1,8 @@
+package projeto.ui
+
 import projeto.Model
 import projeto.Observer
 import projeto.jsonObjects.*
-import projeto.ui.JSONEditorController
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
@@ -12,13 +13,27 @@ fun main() {
     val controller = JSONEditorController(model)
     View(model, controller).open()
 }
+interface Command {
+    fun execute()
+    fun undo()
+}
 
-class View(val model : Model, val controller : JSONEditorController) : Observer {
+class AddNestedObjectCommand(private val model: Model, private val context: JSONObject, private val key: String, private val obj: JSONObject) :
+    Command {
+    override fun execute() {
+        model.addNestedObject(context, key, obj)
+    }
+    override fun undo() {
+        model.removeNestedObjectWithKey(context,key)
+    }
+}
+
+class View(private val model : Model, val controller : JSONEditorController) : Observer {
     init {
         model.add(this)
     }
     val view = this
-    val srcArea = JTextArea()
+    private val srcArea = JTextArea()
     val frame = JFrame("PA - JSON Object Editor").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         layout = GridLayout(0, 2)
@@ -110,6 +125,9 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         }
 
                         delete.addActionListener {
+                            val panel = this@apply.parent
+                            panel.remove(this@apply)
+                            panel.add(appPanel(context))
                             controller.handleRemoveNestedObject(context)
                             menu.isVisible = false
                             revalidate()
@@ -118,7 +136,11 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         }
 
                         undo.addActionListener {
-
+                            controller.undo()
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
                         }
 
                         menu.add(addValue)
@@ -149,8 +171,7 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                         val addValue = JButton("Add Value")
                         val addArray = JButton("Add Array")
                         val addObject = JButton("Add Object")
-
-                        val delete = JButton("Delete")
+                        val delete = JButton("Delete Component")
 
                         addValue.addActionListener {
                             val label = JOptionPane.showInputDialog("Insert label:")
@@ -192,7 +213,16 @@ class View(val model : Model, val controller : JSONEditorController) : Observer 
                             update()
                             frame.repaint()
                         }
-
+                        delete.addActionListener {
+                            val panel = this@apply.parent
+                            panel.remove(this@apply)
+                            panel.add(arrayPanel(context))
+                            controller.handleRemoveNestedArray(context)
+                            menu.isVisible = false
+                            revalidate()
+                            update()
+                            frame.repaint()
+                        }
                         menu.add(addValue)
                         menu.add(addArray)
                         menu.add(addObject)
