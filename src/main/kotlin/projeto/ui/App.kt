@@ -355,9 +355,15 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             alignmentY = Component.TOP_ALIGNMENT
 
             if (value.matches(regex)) {
-                controller.handleAddNestedValue(context, newLabel, JSONNumber(Integer.parseInt(value)))
+                val new_value = value.toBigDecimal()
+                controller.handleAddNestedValue(context, newLabel, JSONNumber(new_value))
             } else {
-                controller.handleAddNestedValue(context, newLabel, JSONString(value))
+                if (value == ""){
+                    controller.handleAddNestedValue(context,newLabel,JSONNull())
+                }else{
+                    controller.handleAddNestedValue(context, newLabel, JSONString(value))
+                }
+
             }
 
             add(JLabel(newLabel))
@@ -365,7 +371,11 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             text.maximumSize = Dimension(Integer.MAX_VALUE, 100)
             text.addFocusListener(object : FocusAdapter() {
                 override fun focusLost(e: FocusEvent) {
-                    controller.handleAddNestedValue(context, newLabel, JSONString(text.text))
+                    if (text.text == ""){
+                        controller.handleAddNestedValue(context, newLabel, JSONNull())
+                    }else {
+                        controller.handleAddNestedValue(context, newLabel, JSONString(text.text))
+                    }
                     view.update()
                 }
             })
