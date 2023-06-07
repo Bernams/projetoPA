@@ -10,8 +10,7 @@ import projeto.jsonObjects.JSONString
 import kotlin.test.assertEquals
 
 class JSONCustomKeyTest {
-
-
+    
     private val reflector = JSONReflector()
 
     @Test

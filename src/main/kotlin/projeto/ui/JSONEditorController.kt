@@ -29,6 +29,8 @@ class JSONEditorController(private val jsonModel: Model) {
     fun handleAddNestedValue(context: JSONObject, key: String, value: JSONElement) {
         jsonModel.addNestedValue(context, key, value)
     }
+
+
     fun handleAddArrayNestedValue(context: JSONArray, value: JSONElement) {
         jsonModel.addNestedArrayValue(context, value)
     }

@@ -8,7 +8,7 @@ import projeto.jsonObjects.JSONNumber
 import projeto.jsonObjects.JSONObject
 import kotlin.test.assertEquals
 
-class EEJSONExcludeTest {
+class JSONExcludeTest {
 
     private val reflector = JSONReflector()
 

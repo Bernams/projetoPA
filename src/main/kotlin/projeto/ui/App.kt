@@ -334,7 +334,7 @@ class View(private val model : Model, val controller : JSONEditorController) : O
             context.add(JSONBoolean(value))
 
             checkbox.addActionListener {
-                context.add(JSONBoolean(checkbox.isSelected))
+                controller.handleAddArrayNestedValue(context, JSONBoolean(checkbox.isSelected))
                 view.update()
             }
             add(checkbox)
